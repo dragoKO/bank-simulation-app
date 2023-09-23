@@ -26,6 +26,7 @@ public class BankSimulationAppApplication {
         Account sender = accountService.createNewAccount(BigDecimal.valueOf(70), new Date(), AccountType.CHECKING, 1L);
         Account receiver = accountService.createNewAccount(BigDecimal.valueOf(50), new Date(), AccountType.CHECKING, 2L);
 
+
         accountService.listAllAccount().forEach(System.out::println);
 
         transactionService.makeTransfer(sender,receiver,new BigDecimal(40),new Date(),"Transaction 1");
