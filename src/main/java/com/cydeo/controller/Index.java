@@ -8,7 +8,7 @@ public class Index {
 
 
     @RequestMapping("/index")
-    public String indexPage() {
+    public String getIndexPage() {
         return "account/index";
     }
 
