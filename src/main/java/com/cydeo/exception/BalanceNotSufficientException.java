@@ -1,4 +1,4 @@
-package com.cydeo.exeption;
+package com.cydeo.exception;
 
 public class BalanceNotSufficientException extends RuntimeException {
     public BalanceNotSufficientException(String message) {

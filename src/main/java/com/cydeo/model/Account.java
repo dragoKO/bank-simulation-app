@@ -13,11 +13,11 @@ import java.util.UUID;
 @Builder
 public class Account {
 
-    AccountStatus accountStatus;
     private UUID id;
     private BigDecimal balance;
     private AccountType accountType;
     private Date creationDate;
     private Long userId;
+    private AccountStatus accountStatus;
 
 }

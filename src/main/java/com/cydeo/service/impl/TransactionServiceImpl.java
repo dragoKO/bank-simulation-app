@@ -1,10 +1,10 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.enums.AccountType;
-import com.cydeo.exeption.AccountOwnershipException;
-import com.cydeo.exeption.BadRequestException;
-import com.cydeo.exeption.BalanceNotSufficientException;
-import com.cydeo.exeption.UnderConstructionException;
+import com.cydeo.exception.AccountOwnershipException;
+import com.cydeo.exception.BadRequestException;
+import com.cydeo.exception.BalanceNotSufficientException;
+import com.cydeo.exception.UnderConstructionException;
 import com.cydeo.model.Account;
 import com.cydeo.model.Transaction;
 import com.cydeo.repository.AccountRepository;
@@ -17,8 +17,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 @Component
 public class TransactionServiceImpl implements TransactionService {
+
     @Value("${under_construction}")
     private boolean underConstruction;
     private final AccountRepository accountRepository;
@@ -31,6 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction makeTransfer(Account sender, Account receiver, BigDecimal amount, Date creationDate, String message) {
+
         if(!underConstruction) {
         /*
                -if sender or receiver is null ?
@@ -75,27 +78,30 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void checkAccountOwnership(Account sender, Account receiver) {
-        if (
-                (sender.getAccountType().equals(AccountType.SAVING) || receiver.getAccountType().equals(AccountType.SAVING))
-                        && !sender.getUserId().equals(receiver.getUserId())
-        ) {
-
+        /*
+            write an if statement that checks if one of the account is saving,
+            and user of sender or receiver is not the same, throw AccountOwnershipException
+         */
+       if((sender.getAccountType().equals(AccountType.SAVING)||receiver.getAccountType().equals(AccountType.SAVING))
+        && !sender.getUserId().equals(receiver.getUserId())){
             throw new AccountOwnershipException("If one of the account is saving, user must be the same for sender and receiver");
         }
-
-
-    }
-
-    @Override
-    public List<Transaction> findAllTransaction() {
-        return transactionRepository.findAll();
     }
 
     private void validateAccount(Account sender, Account receiver) {
-        if (sender == null || receiver == null) throw new BadRequestException("User or sender can not be null");
+        /*
+            -if any of the account is null
+            -if account ids are the same(same account)
+            -f the account exist in the database (repository)
+         */
+        if(sender==null||receiver==null){
+            throw new BadRequestException("Sender or Receiver cannot be null");
+        }
 
-        if (sender.getId().equals(receiver.getId()))
+        //if accounts are the same throw BadRequestException with saying accounts needs to be different
+        if(sender.getId().equals(receiver.getId())){
             throw new BadRequestException("Sender account needs to be different than receiver account");
+        }
 
         findAccountById(sender.getId());
         findAccountById(receiver.getId());
@@ -107,4 +113,8 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.findById(id);
     }
 
+    @Override
+    public List<Transaction> findAllTransaction() {
+        return transactionRepository.findAll();
+    }
 }

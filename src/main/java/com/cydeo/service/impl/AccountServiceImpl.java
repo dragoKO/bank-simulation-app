@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 public class AccountServiceImpl implements AccountService {
 
-    AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -25,7 +25,8 @@ public class AccountServiceImpl implements AccountService {
     public Account createNewAccount(BigDecimal balance, Date createDate, AccountType accountType, Long userId) {
         //we need to create Account object
         Account account = Account.builder().id(UUID.randomUUID()).userId(userId)
-                .balance(balance).accountType(accountType).creationDate(createDate).accountStatus(AccountStatus.ACTIVE).build();
+                .balance(balance).accountType(accountType).creationDate(createDate)
+                .accountStatus(AccountStatus.ACTIVE).build();
         //save into the database(repository)
         //return the object created
         return accountRepository.save(account);
@@ -34,5 +35,21 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> listAllAccount() {
         return accountRepository.findAll();
+    }
+
+    @Override
+    public void deleteAccount(UUID id) {
+        //find the account belongs the id
+        Account account = accountRepository.findById(id);
+        //set status to deleted
+        account.setAccountStatus(AccountStatus.DELETED);
+    }
+
+    @Override
+    public void activateAccount(UUID id) {
+        //find the account belongs the id
+        Account account = accountRepository.findById(id);
+        //set status to active
+        account.setAccountStatus(AccountStatus.ACTIVE);
     }
 }
