@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div>
-                        <form th:object="${transaction}"  action="#">
+                        <form th:object="${transaction}"  method="post" th:action="@{/make-transfer}">
                             <div class="row">
                                 <div class="form-group blu-margin">
                                     <label for="sender" class="col-form-label">Sender</label>
@@ -64,12 +64,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr >
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                <tr th:each="transaction:${lastTransactions}" >
+                                    <td th:text="${transaction.sender}"></td>
+                                    <td th:text="${transaction.receiver}"></td>
+                                    <td th:text="${transaction.amount}" ></td>
+                                    <td th:text="${transaction.createDate}"></td>
+                                    <td th:text="${transaction.message}"></td>
                                 </tr>
                             </tbody>
                         </table>

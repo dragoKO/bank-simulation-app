@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.enums.AccountStatus;
 import com.cydeo.enums.AccountType;
+import com.cydeo.exception.RecordNotFoundException;
 import com.cydeo.model.Account;
 import com.cydeo.repository.AccountRepository;
 import com.cydeo.service.AccountService;
@@ -51,5 +52,11 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id);
         //set status to active
         account.setAccountStatus(AccountStatus.ACTIVE);
+    }
+
+    @Override
+    public Account findAccountByID(UUID id) {
+        return listAllAccount().stream().filter(account -> account.getId().equals(id))
+                .findAny().orElseThrow(() -> new RecordNotFoundException("Account not exist"));
     }
 }
